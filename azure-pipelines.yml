@@ -10,15 +10,20 @@ pool:
   vmImage: 'ubuntu-latest'
 strategy:
   matrix:
-    Python27:
-      python.version: '2.7'
-    Python35:
-      python.version: '3.5'
-    Python36:
-      python.version: '3.6'
+    #Python27:
+    #  python.version: '2.7'
+    #Python35:
+    #  python.version: '3.5'
+    #Python36:
+    #  python.version: '3.6'
     Python37:
       python.version: '3.7'
 
+variables:
+  imageName: 'pipelines-flask-docker'
+  DOCKER_BUILDKIT: 1
+          
+    
 steps:
 - task: UsePythonVersion@0
   inputs:
@@ -34,3 +39,10 @@ steps:
     pip install pytest pytest-azurepipelines
     pytest
   displayName: 'pytest'
+
+- task: Docker@2
+  displayName: Build an image
+  inputs:
+    repository: $(imageName)
+    command: build
+    Dockerfile: app/Dockerfile
